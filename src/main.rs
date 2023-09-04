@@ -67,8 +67,8 @@ fn main() {
     loop {
         intersection.manage_traffic();
 
-        // Here you can add more logic for generating vehicles, collecting statistics, etc.
-        // For this example, we'll just break the loop to prevent it from running infinitely.
+        // Here add more logic for generating vehicles, collecting statistics, etc.
+        // For this, we'll just break the loop to prevent it from running infinitely.
         break;
     }
 }
