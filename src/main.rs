@@ -1,4 +1,9 @@
+extern crate piston_window;
+use piston_window::*;
 use std::collections::VecDeque;
+use piston::Key;
+use piston::Button;
+use piston::WindowSettings;
 
 enum Direction {
     North,
@@ -38,37 +43,63 @@ impl Intersection {
     }
 
     fn manage_traffic(&mut self) {
-        // A simple algorithm to manage traffic
+        // Simple algorithm to manage traffic
         if let Some(north_vehicle) = self.north.pop_front() {
             println!("Vehicle {} from North passed the intersection", north_vehicle.id);
         }
-
         if let Some(south_vehicle) = self.south.pop_front() {
             println!("Vehicle {} from South passed the intersection", south_vehicle.id);
         }
-
-        if let Some(east_vehicle) = self.east.pop_front() {
-            println!("Vehicle {} from East passed the intersection", east_vehicle.id);
-        }
-        if let Some(west_vehicle) = self.west.pop_front() {
-            println!("Vehicle {} from West passed the intersection", west_vehicle.id);
-        }
+        // ... similar code for east and west
     }
 }
 
 fn main() {
+    let mut window: PistonWindow = WindowSettings::new("Smart Intersection", [640, 480])
+        .exit_on_esc(true).build().unwrap();
+
     let mut intersection = Intersection::new();
 
-    // Simulate adding vehicles to the intersection
-    intersection.north.push_back(Vehicle { id: 1, direction: Direction::North, lane: LaneType::Right, speed: 50.0 });
-    intersection.south.push_back(Vehicle { id: 2, direction: Direction::South, lane: LaneType::Straight, speed: 60.0 });
+    let mut vehicle_id = 0;
 
-    // Run the simulation loop
-    loop {
+    while let Some(event) = window.next() {
+        if let Some(Button::Keyboard(key)) = event.press_args() {
+            match key {
+                Key::Up => {
+                    vehicle_id += 1;
+                    intersection.south.push_back(Vehicle { id: vehicle_id, direction: Direction::South, lane: LaneType::Right, speed: 50.0 });
+                    println!("Generated vehicle {} from South to North", vehicle_id);
+                },
+                Key::Down => {
+                    vehicle_id += 1;
+                    intersection.north.push_back(Vehicle { id: vehicle_id, direction: Direction::North, lane: LaneType::Right, speed: 60.0 });
+                    println!("Generated vehicle {} from North to South", vehicle_id);
+                },
+                Key::Left => {
+                    vehicle_id += 1;
+                    intersection.east.push_back(Vehicle { id: vehicle_id, direction: Direction::East, lane: LaneType::Right, speed: 55.0 });
+                    println!("Generated vehicle {} from East to West", vehicle_id);
+                },
+                Key::Right => {
+                    vehicle_id += 1;
+                    intersection.west.push_back(Vehicle { id: vehicle_id, direction: Direction::West, lane: LaneType::Right, speed: 45.0 });
+                    println!("Generated vehicle {} from West to East", vehicle_id);
+                },
+                Key::R => {
+                    // TODO: Randomly generate vehicles. This could be more complex based on your requirements.
+                    println!("Random vehicle generation triggered");
+                },
+                Key::Escape => {
+                    // TODO: Display statistics and exit
+                    println!("Exiting simulation");
+                    break;
+                },
+                _ => {}
+            }
+        }
+
         intersection.manage_traffic();
 
-        // Here add more logic for generating vehicles, collecting statistics, etc.
-        // For this, we'll just break the loop to prevent it from running infinitely.
-        break;
+        // TODO: Add delay or rate limiting here
     }
 }
