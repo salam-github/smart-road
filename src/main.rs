@@ -1,14 +1,9 @@
-extern crate piston;
-extern crate pistoncore_glutin_window;
-extern crate graphics;
-extern crate piston2d_opengl_graphics;
-
 use piston::window::WindowSettings;
 use piston::event_loop::{EventSettings, Events};
 use piston::input::{RenderEvent, PressEvent, Button, Key};
-use pistoncore_glutin_window::GlutinWindow as Window;
-use piston2d_opengl_graphics::{GlGraphics, OpenGL};
-use graphics::rectangle;
+use glutin_window::GlutinWindow as Window;
+use opengl_graphics::{GlGraphics, OpenGL};
+use graphics::{clear, rectangle};
 
 struct Vehicle {
     x: f64,
